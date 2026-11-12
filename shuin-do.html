@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>朱印堂 ぺったん — Shuindō Pettan | The Vermilion Stamp Hall</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;600;700;900&family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --vermilion: #c1272d;
+    --vermilion-dark: #8b1a1a;
+    --vermilion-bright: #e63946;
+    --ink-black: #1a1410;
+    --ink-soft: #2a221c;
+    --washi: #f4ecda;
+    --washi-dark: #e8dcc0;
+    --washi-shadow: #d4c4a0;
+    --gold: #b8923f;
+    --stencil-blue: #2563eb;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body { height: 100%; }
+
+  body {
+    background-color: #0e0a08;
+    /* Uses your local pic1.jpg as the body texture with a dark overlay */
+    background-image: 
+      linear-gradient(rgba(14, 10, 8, 0.88), rgba(14, 10, 8, 0.88)),
+      url('assets/pic1.jpg');
+    background-size: 400px;
+    background-repeat: repeat;
+    color: var(--washi);
+    font-family: 'Noto Serif JP', 'Times New Roman', serif;
+    font-size: 17px;
+    min-height: 100vh;
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.6;
+  }
+
+  @keyframes stampSlam {
+    0% { transform: translate(0, 0) scale(1.01); }
+    25% { transform: translate(-6px, 8px) rotate(-0.8deg); }
+    50% { transform: translate(6px, -6px) rotate(0.8deg); }
+    75% { transform: translate(-3px, 4px); }
+    100% { transform: translate(0, 0) scale(1); }
+  }
+  .shake-screen { animation: stampSlam 0.22s ease-out; }
+
+  .app-frame { width: 100%; max-width: 1200px; position: relative; z-index: 1; }
+
+  /* ===== TITLE HEADER ===== */
+  .title-header {
+    background-color: var(--ink-black);
+    /* Uses your local pic3.jpg as a header texture */
+    background-image: 
+      linear-gradient(rgba(26, 20, 16, 0.92), rgba(26, 20, 16, 0.92)),
+      url('assets/pic3.jpg');
+    background-size: cover;
+    background-position: center;
+    border: 3px solid var(--vermilion);
+    outline: 1px solid var(--gold);
+    outline-offset: -7px;
+    padding: 24px 28px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 0 0 1px var(--ink-black), 0 6px 0 rgba(0,0,0,0.5), inset 0 0 40px rgba(0,0,0,0.7);
+    margin-bottom: 16px;
+  }
+
+  .title-seal-left, .title-seal-right {
+    position: absolute;
+    width: 46px;
+    height: 46px;
+    background: var(--vermilion);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 16px;
+    line-height: 1.05;
+    border: 2px solid var(--vermilion-dark);
+    box-shadow: 0 2px 0 rgba(0,0,0,0.4);
+    text-align: center;
+  }
+  .title-seal-left { top: 18px; left: 18px; transform: rotate(-4deg); }
+  .title-seal-right { top: 18px; right: 18px; transform: rotate(4deg); }
+
+  .title-header h1 { margin: 0 60px; line-height: 1.2; }
+  .title-header h1 .jp-title {
+    display: block;
+    font-family: 'Noto Serif JP', serif;
+    font-size: clamp(30px, 4.8vw, 46px);
+    font-weight: 900;
+    color: var(--vermilion-bright);
+    letter-spacing: 0.2em;
+    text-shadow: 0 2px 0 var(--vermilion-dark), 0 0 30px rgba(193, 39, 45, 0.4);
+    margin-bottom: 2px;
+  }
+  .title-header h1 .en-title {
+    display: block;
+    font-size: clamp(15px, 1.8vw, 19px);
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    margin-top: 4px;
+  }
+  .title-sub {
+    color: var(--washi);
+    font-size: 17px;
+    font-weight: 500;
+    margin-top: 12px;
+    font-style: italic;
+    opacity: 0.85;
+  }
+
+  /* ===== TOOLBAR ===== */
+  .toolbar {
+    width: 100%;
+    background: var(--ink-black);
+    border: 3px solid var(--vermilion);
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.5);
+  }
+  .toolbar-label {
+    color: var(--gold);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+  }
+  .header-right { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+
+  .lang-switcher {
+    display: flex;
+    border: 2px solid var(--gold);
+    background: var(--washi);
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.5);
+  }
+  .lang-btn {
+    border: none;
+    background: transparent;
+    color: var(--ink-black);
+    padding: 8px 14px;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: 'Noto Serif JP', serif;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .lang-btn + .lang-btn { border-left: 1px solid var(--washi-shadow); }
+  .lang-btn.active { background: var(--vermilion); color: #fff; }
+  .lang-btn:hover:not(.active) { background: var(--washi-dark); }
+
+  .ink-meter {
+    font-size: 15px;
+    padding: 8px 14px;
+    background: var(--washi);
+    color: var(--ink-black);
+    border: 2px solid var(--gold);
+    font-weight: 700;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.5);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  /* ===== WORKBENCH ===== */
+  .workbench {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 960px) { .workbench { grid-template-columns: 1fr; } }
+
+  .station {
+    background-color: var(--washi);
+    /* Uses your local pic2.jpg as the station texture with a light washi overlay */
+    background-image: 
+      linear-gradient(rgba(244, 236, 218, 0.93), rgba(244, 236, 218, 0.93)),
+      url('assets/pic2.jpg');
+    background-size: cover;
+    background-position: center;
+    border: 3px solid var(--ink-black);
+    box-shadow: inset 0 0 0 1px var(--washi), inset 0 0 0 3px var(--ink-black), 6px 6px 0 rgba(0,0,0,0.6);
+    padding: 18px 18px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    color: var(--ink-black);
+    position: relative;
+  }
+  .station::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--vermilion-dark), var(--vermilion), var(--vermilion-dark));
+  }
+
+  .station-bar {
+    background: var(--ink-black);
+    color: var(--washi);
+    padding: 10px 16px;
+    font-weight: 700;
+    font-size: 17px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 2px solid var(--vermilion);
+    border-left: 6px solid var(--vermilion);
+    letter-spacing: 0.03em;
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+  }
+  .station-bar .bar-jp {
+    font-size: 20px;
+    color: var(--vermilion-bright);
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-shadow: 1px 1px 0 #000;
+  }
+
+  /* ===== CARVE ZONE ===== */
+  .carve-zone {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .canvas-caption {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--ink-black);
+  }
+  .canvas-stack {
+    position: relative;
+    width: 220px;
+    height: 220px;
+    background: #fffefa;
+    border: 3px solid var(--ink-black);
+    box-shadow: inset 0 0 0 1px var(--washi), inset 0 0 0 3px var(--vermilion-dark);
+  }
+  .canvas-stack canvas {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  }
+  #guideCanvas { pointer-events: none; z-index: 1; }
+  #carveCanvas { cursor: crosshair; touch-action: none; z-index: 2; }
+
+  .carve-tools { display: flex; gap: 5px; margin-top: 10px; }
+  .tool-btn {
+    flex: 1;
+    padding: 8px 6px;
+    font-size: 14px;
+    min-width: 0;
+  }
+  .tool-btn.active {
+    background: var(--ink-black);
+    color: var(--washi);
+    box-shadow: 1px 1px 0 var(--vermilion);
+  }
+
+  /* ===== SHUNIKU PAD ===== */
+  .shuniku-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  .shuniku-pad {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #e63946, #a4161a 65%, #6b0f0e 100%);
+    border: 6px solid var(--ink-black);
+    box-shadow: inset 0 4px 10px rgba(0,0,0,0.7), inset 0 -2px 6px rgba(255,255,255,0.15), 0 4px 0 var(--gold), 0 6px 0 var(--ink-black);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 900;
+    font-size: 15px;
+    text-align: center;
+    line-height: 1.3;
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+  .shuniku-pad:hover {
+    box-shadow: inset 0 4px 10px rgba(0,0,0,0.7), inset 0 -2px 6px rgba(255,255,255,0.15), 0 4px 0 var(--gold), 0 6px 0 var(--ink-black), 0 0 20px rgba(230, 57, 70, 0.5);
+  }
+  .shuniku-pad:active {
+    transform: translateY(3px);
+    box-shadow: inset 0 4px 10px rgba(0,0,0,0.7), inset 0 -2px 6px rgba(255,255,255,0.15), 0 1px 0 var(--gold), 0 3px 0 var(--ink-black);
+  }
+  .shuniku-hint {
+    font-size: 14px;
+    text-align: center;
+    max-width: 130px;
+    color: var(--ink-soft);
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  /* ===== PRESET BOX ===== */
+  .preset-box {
+    background: var(--washi-dark);
+    border: 2px solid var(--ink-black);
+    box-shadow: inset 0 0 0 2px var(--washi);
+    padding: 12px;
+  }
+  .preset-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .trace-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 15px;
+    color: var(--stencil-blue);
+    cursor: pointer;
+    margin-bottom: 0;
+    font-weight: 700;
+    background: rgba(37, 99, 235, 0.08);
+    padding: 4px 10px;
+    border: 1px solid var(--stencil-blue);
+  }
+  .trace-toggle input { accent-color: var(--stencil-blue); cursor: pointer; }
+  .preset-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+  @media (max-width: 560px) { .preset-grid { grid-template-columns: repeat(2, 1fr); } }
+  .preset-btn {
+    padding: 9px 4px;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+  }
+  .preset-btn.active {
+    background: var(--vermilion);
+    color: #fff;
+    border-color: var(--vermilion-dark);
+    box-shadow: 2px 2px 0 var(--ink-black);
+  }
+
+  /* ===== CONTROLS ===== */
+  .controls-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 480px) { .controls-grid { grid-template-columns: 1fr; } }
+
+  label {
+    font-size: 15px;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 6px;
+    color: var(--ink-black);
+  }
+  select, input[type="text"], input[type="range"] {
+    width: 100%;
+    padding: 9px 10px;
+    border: 2px solid var(--ink-black);
+    background: #fffefa;
+    font-family: 'Noto Serif JP', serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--ink-black);
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+  }
+  input[type="range"] { padding: 6px 0; accent-color: var(--vermilion); cursor: pointer; }
+
+  button, .file-label {
+    font-family: 'Noto Serif JP', serif;
+    font-weight: 700;
+    font-size: 16px;
+    padding: 11px 16px;
+    border: 2px solid var(--ink-black);
+    background: var(--washi);
+    color: var(--ink-black);
+    cursor: pointer;
+    box-shadow: 3px 3px 0 var(--ink-black);
+    text-align: center;
+    display: inline-block;
+    transition: transform 0.08s, box-shadow 0.08s;
+    letter-spacing: 0.02em;
+  }
+  button:hover, .file-label:hover { background: #ffe8e8; }
+  button:active, .file-label:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink-black); }
+  .btn-vermilion { background: var(--vermilion); color: #fff; border-color: var(--vermilion-dark); }
+  .btn-vermilion:hover { background: var(--vermilion-dark); color: #fff; }
+
+  /* ===== PAPER DESK ===== */
+  .paper-desk {
+    position: relative;
+    background: var(--ink-soft);
+    border: 3px solid var(--ink-black);
+    box-shadow: inset 0 0 0 2px var(--vermilion-dark);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    padding: 8px;
+  }
+  canvas#documentCanvas {
+    background: #fdfbf7;
+    cursor: pointer;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  }
+
+  .stamp-size-bar { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .stamp-size-bar label { white-space: nowrap; margin-bottom: 0; }
+  .stamp-size-bar input[type="range"] { flex: 1; min-width: 100px; }
+
+  .doc-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: space-between; }
+  .doc-actions > * { flex: 1 1 auto; }
+
+  /* ===== VERTICAL SIGNS ===== */
+  .vertical-sign {
+    position: fixed;
+    writing-mode: vertical-rl;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 30px;
+    font-weight: 900;
+    color: var(--vermilion);
+    letter-spacing: 0.35em;
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: 0;
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.6);
+  }
+  .vertical-sign.left { top: 50%; left: 10px; transform: translateY(-50%) rotate(180deg); }
+  .vertical-sign.right { top: 50%; right: 10px; transform: translateY(-50%); }
+  @media (max-width: 1400px) { .vertical-sign { display: none; } }
+
+  .svg-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+  @media (max-width: 640px) {
+    body { padding: 12px 8px; font-size: 16px; }
+    .title-header { padding: 18px 12px; }
+    .title-seal-left, .title-seal-right { width: 34px; height: 34px; font-size: 12px; }
+    .title-header h1 { margin: 0 40px; }
+    .station { padding: 14px; }
+    .toolbar { padding: 10px 12px; }
+  }
+</style>
+</head>
+<body>
+
+<svg class="svg-defs">
+  <filter id="hankoDistress">
+    <feTurbulence type="fractalNoise" baseFrequency="0.08" numOctaves="3" result="noise" />
+    <feDisplacementMap in="SourceGraphic" in2="noise" scale="4" xChannelSelector="R" yChannelSelector="G" />
+  </filter>
+</svg>
+
+<div class="vertical-sign left" aria-hidden="true">朱印堂</div>
+<div class="vertical-sign right" aria-hidden="true">ぺったん</div>
+
+<div class="app-frame">
+
+  <header class="title-header">
+    <div class="title-seal-left" aria-hidden="true">朱<br>印<br>堂</div>
+    <div class="title-seal-right" aria-hidden="true">ぺ<br>っ<br>た<br>ん</div>
+    <h1>
+      <span class="jp-title">朱印堂 ぺったん</span>
+      <span class="en-title">SHUINDŌ PETTAN</span>
+    </h1>
+    <p class="title-sub" data-i18n="appSubtitle">The Vermilion Stamp Hall — Carve Goofy Doodles Into Traditional Red Seals</p>
+  </header>
+
+  <div class="toolbar">
+    <span class="toolbar-label">印 · SEAL · 朱</span>
+    <div class="header-right">
+      <div class="lang-switcher" role="group" aria-label="Language Switcher">
+        <button type="button" class="lang-btn active" data-lang="en">EN</button>
+        <button type="button" class="lang-btn" data-lang="vi">VI</button>
+        <button type="button" class="lang-btn" data-lang="ja">日本語</button>
+      </div>
+      <div class="ink-meter" id="inkStatus">🔴 Ink Level: 100%</div>
+    </div>
+  </div>
+
+  <main class="workbench">
+
+    <section class="station">
+      <div class="station-bar">
+        <span data-i18n="station1Title">1. CARVE STAMP & DIP SHUNIKU INK</span>
+        <span class="bar-jp">彫刻</span>
+      </div>
+
+      <div class="carve-zone">
+        <div>
+          <small class="canvas-caption" data-i18n="carvePrompt">Draw or trace inside the carving block:</small>
+          <div class="canvas-stack">
+            <canvas id="guideCanvas" width="220" height="220"></canvas>
+            <canvas id="carveCanvas" width="220" height="220"></canvas>
+          </div>
+          <div class="carve-tools">
+            <button type="button" id="toolCarveBtn" class="tool-btn active" data-i18n="toolCarve">✒️ Carve</button>
+            <button type="button" id="toolEraseBtn" class="tool-btn" data-i18n="toolErase">🩹 Eraser</button>
+            <button type="button" id="undoCarveBtn" class="tool-btn" data-i18n="toolUndo">↩️ Undo</button>
+            <button type="button" id="clearCarveBtn" class="tool-btn" data-i18n="toolClear">🗑️</button>
+          </div>
+        </div>
+
+        <div class="shuniku-wrapper">
+          <div class="shuniku-pad" id="shunikuPad" title="Click to dip stamp in vermilion ink!">
+            <span id="shunikuLabel">DIP INK<br>SHUNIKU<br>(朱肉)</span>
+          </div>
+          <small class="shuniku-hint" data-i18n="shunikuHint">
+            Stamping depletes ink. Click the Shuniku pad to refill!
+          </small>
+        </div>
+      </div>
+
+      <div class="preset-box">
+        <div class="preset-header">
+          <label data-i18n="presetTitle">🎨 Goofy Templates & Trace Stencils:</label>
+          <label class="trace-toggle">
+            <input type="checkbox" id="traceModeToggle">
+            <span data-i18n="traceModeLabel">✏️ Trace Stencil Mode</span>
+          </label>
+        </div>
+        <div class="preset-grid">
+          <button type="button" class="preset-btn active" data-preset="cryingCat" data-i18n="p_cryingCat">🐱 Crying Cat</button>
+          <button type="button" class="preset-btn" data-preset="blepCat" data-i18n="p_blepCat">😼 Blep Cat</button>
+          <button type="button" class="preset-btn" data-preset="alien" data-i18n="p_alien">👽 Silly Alien</button>
+          <button type="button" class="preset-btn" data-preset="shiba" data-i18n="p_shiba">🐕 Shiba Doge</button>
+          <button type="button" class="preset-btn" data-preset="frog" data-i18n="p_frog">🐸 Derpy Frog</button>
+          <button type="button" class="preset-btn" data-preset="bunny" data-i18n="p_bunny">🐰 Peace Bunny</button>
+          <button type="button" class="preset-btn" data-preset="duck" data-i18n="p_duck">🦆 Knife Duck</button>
+          <button type="button" class="preset-btn" data-preset="fish" data-i18n="p_fish">🐟 Dried Fish</button>
+        </div>
+      </div>
+
+      <div class="controls-grid">
+        <div>
+          <label data-i18n="shapeLabel">Stone Block Shape:</label>
+          <select id="stampShape">
+            <option value="circle" data-i18n="shapeCircle">Circle (Maru-in)</option>
+            <option value="square" data-i18n="shapeSquare">Clan Square (Kaku-in)</option>
+            <option value="oval" data-i18n="shapeOval">Classic Oval (Koban-in)</option>
+          </select>
+        </div>
+        <div>
+          <label data-i18n="textLabel">Engraved Text (Max 10 chars):</label>
+          <input type="text" id="stampText" value="APPROVED" maxlength="10">
+        </div>
+        <div>
+          <label><span data-i18n="gritLabel">Stone Grit / Ink Wear</span> (<span id="gritVal">35</span>%):</label>
+          <input type="range" id="gritRange" min="5" max="80" value="35">
+        </div>
+        <div>
+          <label><span data-i18n="brushLabel">Brush / Chisel Thickness</span> (<span id="brushVal">6</span>px):</label>
+          <input type="range" id="brushRange" min="3" max="14" value="6">
+        </div>
+      </div>
+
+      <button type="button" id="downloadStampPngBtn" class="btn-vermilion" data-i18n="downloadStickerBtn">
+        📥 DOWNLOAD TRANSPARENT STAMP (.PNG) AS STICKER
+      </button>
+    </section>
+
+    <section class="station">
+      <div class="station-bar">
+        <span data-i18n="station2Title">2. CLICK PAPER TO SLAM STAMP "THUMP!"</span>
+        <span class="bar-jp">押印</span>
+      </div>
+
+      <div class="paper-desk">
+        <canvas id="documentCanvas" width="520" height="360"></canvas>
+      </div>
+
+      <div class="stamp-size-bar">
+        <label><span data-i18n="stampSizeLabel">Stamp Press Size</span> (<span id="stampSizeVal">135</span>px):</label>
+        <input type="range" id="stampSizeRange" min="80" max="210" value="135">
+      </div>
+
+      <div class="doc-actions">
+        <label class="file-label">
+          <span data-i18n="uploadBtn">🖼️ Upload Photo</span>
+          <input type="file" id="bgUploadInput" accept="image/*" style="display:none;">
+        </label>
+        <button type="button" id="undoStampBtn" data-i18n="undoStampBtn">↩️ Undo Stamp</button>
+        <button type="button" id="resetDocBtn" data-i18n="resetDocBtn">📄 Fresh Washi</button>
+        <button type="button" id="downloadDocBtn" class="btn-vermilion" data-i18n="downloadDocBtn">
+          💾 Save Image (.PNG)
+        </button>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+// ============================================================================
+// 1. MULTI-LANGUAGE DICTIONARY
+// ============================================================================
+const I18N = {
+  en: {
+    appSubtitle: 'The Vermilion Stamp Hall — Carve Goofy Doodles Into Traditional Red Seals',
+    inkReady: (pct) => `🔴 Ink Level: ${pct}% (Ready to stamp!)`,
+    inkLow: (pct) => `🟠 Ink Level: ${pct}% (Running dry! Click Shuniku!)`,
+    station1Title: '1. CARVE STAMP & DIP SHUNIKU INK',
+    carvePrompt: 'Draw or trace inside the carving block:',
+    toolCarve: '✒️ Carve',
+    toolErase: '🩹 Eraser',
+    toolUndo: '↩️ Undo',
+    toolClear: '🗑️',
+    shunikuPadHtml: 'DIP INK<br>SHUNIKU<br>(朱肉)',
+    shunikuHint: 'Stamping depletes ink. Click the Shuniku pad to refill!',
+    presetTitle: '🎨 Goofy Templates & Trace Stencils:',
+    traceModeLabel: '✏️ Trace Stencil Mode',
+    p_cryingCat: '🐱 Crying Cat',
+    p_blepCat: '😼 Blep Cat',
+    p_alien: '👽 Silly Alien',
+    p_shiba: '🐕 Shiba Doge',
+    p_frog: '🐸 Derpy Frog',
+    p_bunny: '🐰 Peace Bunny',
+    p_duck: '🦆 Knife Duck',
+    p_fish: '🐟 Dried Fish',
+    shapeLabel: 'Stone Block Shape:',
+    shapeCircle: 'Circle (Maru-in)',
+    shapeSquare: 'Clan Square (Kaku-in)',
+    shapeOval: 'Classic Oval (Koban-in)',
+    textLabel: 'Engraved Text (Max 10 chars):',
+    defaultStampText: 'APPROVED',
+    gritLabel: 'Stone Grit / Ink Wear',
+    brushLabel: 'Brush / Chisel Size',
+    downloadStickerBtn: '📥 DOWNLOAD TRANSPARENT STAMP (.PNG) AS STICKER',
+    station2Title: '2. CLICK PAPER TO SLAM STAMP "THUMP!"',
+    stampSizeLabel: 'Stamp Press Size',
+    uploadBtn: '🖼️ Upload Photo',
+    undoStampBtn: '↩️ Undo Stamp',
+    resetDocBtn: '📄 Fresh Washi',
+    downloadDocBtn: '💾 Save Image (.PNG)',
+    docHeader: 'CERTIFICATE OF VERMILION AUTHENTICITY (証明書)',
+    docSub: 'Click anywhere on this washi sheet to press your seal'
+  },
+  vi: {
+    appSubtitle: 'Điện Ấn Đường — Biến Nét Vẽ Vô Tri Thành Con Dấu Đỏ Truyền Thống',
+    inkReady: (pct) => `🔴 Độ đậm mực: ${pct}% (Sẵn sàng đóng dấu!)`,
+    inkLow: (pct) => `🟠 Độ đậm mực: ${pct}% (Sắp hết mực, bấm hộp Chu Sa để chấm thêm!)`,
+    station1Title: '1. KHẮC DẤU & CHẤM MỰC CHU SA',
+    carvePrompt: 'Vẽ hoặc đồ theo nét mờ trong khung khắc:',
+    toolCarve: '✒️ Khắc nét',
+    toolErase: '🩹 Cục tẩy',
+    toolUndo: '↩️ Hoàn tác',
+    toolClear: '🗑️',
+    shunikuPadHtml: 'CHẤM MỰC<br>CHU SA<br>(朱肉)',
+    shunikuHint: 'Đóng nhiều sẽ mờ mực. Bấm hộp mực để nạp lại!',
+    presetTitle: '🎨 Mẫu Vẽ Có Sẵn:',
+    traceModeLabel: '✏️ Chế độ Đồ Vẽ',
+    p_cryingCat: '🐱 Mèo khóc',
+    p_blepCat: '😼 Mèo lè lưỡi',
+    p_alien: '👽 Người ngoài hành tinh',
+    p_shiba: '🐕 Chó Shiba',
+    p_frog: '🐸 Ếch vô tri',
+    p_bunny: '🐰 Thỏ xin chào',
+    p_duck: '🦆 Vịt cầm dao',
+    p_fish: '🐟 Cá khô',
+    shapeLabel: 'Hình dáng phôi đá:',
+    shapeCircle: 'Tròn truyền thống (Maru-in)',
+    shapeSquare: 'Vuông gia tộc (Kaku-in)',
+    shapeOval: 'Bầu dục cổ điển (Koban-in)',
+    textLabel: 'Chữ khắc kèm (Tối đa 10 ký tự):',
+    defaultStampText: 'ĐÃ DUYỆT',
+    gritLabel: 'Độ mẻ đá / Rỗ mực',
+    brushLabel: 'Độ dày nét khắc',
+    downloadStickerBtn: '📥 TẢI FILE CON DẤU NỀN TRONG SUỐT (.PNG)',
+    station2Title: '2. CLICK LÊN GIẤY ĐỂ ĐÓNG DẤU "CỘP!"',
+    stampSizeLabel: 'Kích cỡ đóng dấu',
+    uploadBtn: '🖼️ Tải ảnh lên',
+    undoStampBtn: '↩️ Xóa dấu vừa đóng',
+    resetDocBtn: '📄 Làm mới giấy Washi',
+    downloadDocBtn: '💾 Tải Ảnh Đã Đóng Dấu (.PNG)',
+    docHeader: 'GIẤY CHỨNG NHẬN CHU SA (証明書)',
+    docSub: 'Bấm vào bất kỳ đâu trên tờ giấy để đóng ấn'
+  },
+  ja: {
+    appSubtitle: '朱印堂 ぺったん — ゆるい落書きを本格的な朱肉ハンコに変換！',
+    inkReady: (pct) => `🔴 朱肉残量: ${pct}% (押印準備OK！)`,
+    inkLow: (pct) => `🟠 朱肉残量: ${pct}% (インク切れ間近！朱肉をクリック)`,
+    station1Title: '1. 印面を彫る ＆ 朱肉をつける',
+    carvePrompt: '枠内にイラストを描くか、下絵をなぞってください:',
+    toolCarve: '✒️ 彫る',
+    toolErase: '🩹 消しゴム',
+    toolUndo: '↩️ 戻す',
+    toolClear: '🗑️',
+    shunikuPadHtml: '朱肉を<br>つける<br>(補充)',
+    shunikuHint: '何回も押すと薄くなります。朱肉を押して補充しよう！',
+    presetTitle: '🎨 ゆるキャラ見本 ＆ 下絵:',
+    traceModeLabel: '✏️ なぞり描きモード',
+    p_cryingCat: '🐱 泣き猫',
+    p_blepCat: '😼 ぺろ猫',
+    p_alien: '👽 宇宙人',
+    p_shiba: '🐕 柴犬',
+    p_frog: '🐸 カエル',
+    p_bunny: '🐰 ピース兎',
+    p_duck: '🦆 ナイフ鴨',
+    p_fish: '🐟 干物',
+    shapeLabel: '印影のカタチ:',
+    shapeCircle: '丸印 (伝統的)',
+    shapeSquare: '角印 (社判・落款風)',
+    shapeOval: '小判印 (クラシック)',
+    textLabel: '刻印テキスト (最大10文字):',
+    defaultStampText: '承認済',
+    gritLabel: '石の欠け・かすれ具合',
+    brushLabel: '彫り線の太さ',
+    downloadStickerBtn: '📥 透過PNGスタンプとして保存',
+    station2Title: '2. 和紙をクリックして「ドン！」と押印',
+    stampSizeLabel: '押印サイズ',
+    uploadBtn: '🖼️ 画像を読込',
+    undoStampBtn: '↩️ 押印を戻す',
+    resetDocBtn: '📄 新しい和紙にする',
+    downloadDocBtn: '💾 押印済み画像を保存 (.PNG)',
+    docHeader: '朱印認定証 (SHUIN CERTIFICATE)',
+    docSub: 'この和紙の好きな場所をクリックしてハンコを押してください'
+  }
+};
+
+let currentLang = 'en';
+
+// ============================================================================
+// 2. SOUND ENGINE
+// ============================================================================
+const StampAudio = {
+  ctx: null,
+  init() {
+    if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+    if (this.ctx.state === 'suspended') this.ctx.resume();
+  },
+  playStampThump() {
+    this.init();
+    const now = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(150, now);
+    osc.frequency.exponentialRampToValueAtTime(32, now + 0.16);
+    gain.gain.setValueAtTime(0.9, now);
+    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.18);
+    osc.connect(gain).connect(this.ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.19);
+    const bufferSize = this.ctx.sampleRate * 0.05;
+    const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+    const data = noiseBuffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+    const noise = this.ctx.createBufferSource();
+    noise.buffer = noiseBuffer;
+    const filter = this.ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.value = 900;
+    const nGain = this.ctx.createGain();
+    nGain.gain.setValueAtTime(0.5, now);
+    nGain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+    noise.connect(filter).connect(nGain).connect(this.ctx.destination);
+    noise.start(now);
+  },
+  playInkDip() {
+    this.init();
+    const now = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(220, now);
+    osc.frequency.exponentialRampToValueAtTime(480, now + 0.09);
+    gain.gain.setValueAtTime(0.3, now);
+    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+    osc.connect(gain).connect(this.ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.1);
+  }
+};
+
+// ============================================================================
+// 3. PRESET DRAWERS
+// ============================================================================
+const PRESET_DRAWERS = {
+  cryingCat(ctx) {
+    ctx.beginPath();
+    ctx.moveTo(65, 95); ctx.lineTo(55, 45); ctx.lineTo(95, 70); ctx.lineTo(125, 70); ctx.lineTo(165, 45); ctx.lineTo(155, 95);
+    ctx.quadraticCurveTo(170, 145, 110, 150); ctx.quadraticCurveTo(50, 145, 65, 95);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(80, 100); ctx.lineTo(98, 100);
+    ctx.moveTo(122, 100); ctx.lineTo(140, 100);
+    ctx.moveTo(88, 102); ctx.quadraticCurveTo(82, 125, 88, 144);
+    ctx.moveTo(132, 102); ctx.quadraticCurveTo(138, 125, 132, 144);
+    ctx.moveTo(98, 125); ctx.quadraticCurveTo(105, 118, 110, 125);
+    ctx.quadraticCurveTo(115, 118, 122, 125);
+    ctx.stroke();
+  },
+  blepCat(ctx) {
+    ctx.beginPath();
+    ctx.moveTo(60, 92); ctx.lineTo(52, 46); ctx.lineTo(92, 68); ctx.lineTo(128, 68); ctx.lineTo(168, 46); ctx.lineTo(160, 92);
+    ctx.quadraticCurveTo(172, 148, 110, 148); ctx.quadraticCurveTo(48, 148, 60, 92);
+    ctx.stroke();
+    ctx.beginPath(); ctx.arc(84, 98, 4.5, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(136, 98, 4.5, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(95, 112); ctx.quadraticCurveTo(102, 120, 110, 112); ctx.quadraticCurveTo(118, 120, 125, 112);
+    ctx.moveTo(103, 116); ctx.quadraticCurveTo(103, 136, 110, 136); ctx.quadraticCurveTo(117, 136, 117, 116);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(42, 102); ctx.lineTo(62, 105);
+    ctx.moveTo(42, 115); ctx.lineTo(62, 113);
+    ctx.moveTo(178, 102); ctx.lineTo(158, 105);
+    ctx.moveTo(178, 115); ctx.lineTo(158, 113);
+    ctx.stroke();
+  },
+  alien(ctx) {
+    ctx.beginPath();
+    ctx.moveTo(110, 48); ctx.bezierCurveTo(172, 48, 168, 115, 110, 152); ctx.bezierCurveTo(52, 115, 48, 48, 110, 48);
+    ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(110, 48); ctx.lineTo(110, 28); ctx.stroke();
+    ctx.beginPath(); ctx.arc(110, 23, 5, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.ellipse(86, 96, 16, 9, 0.35, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.ellipse(134, 96, 16, 9, -0.35, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(110, 126, 9, 0.2, Math.PI - 0.2); ctx.stroke();
+  },
+  shiba(ctx) {
+    ctx.beginPath();
+    ctx.moveTo(64, 86); ctx.lineTo(54, 42); ctx.lineTo(92, 64); ctx.lineTo(128, 64); ctx.lineTo(166, 42); ctx.lineTo(156, 86);
+    ctx.bezierCurveTo(182, 115, 162, 152, 110, 152); ctx.bezierCurveTo(58, 152, 38, 115, 64, 86);
+    ctx.stroke();
+    ctx.beginPath(); ctx.ellipse(86, 80, 7, 3, -0.2, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.ellipse(134, 80, 7, 3, 0.2, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(88, 95, 4, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(136, 95, 4, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(110, 108, 4.5, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(110, 113); ctx.lineTo(110, 123);
+    ctx.moveTo(92, 124); ctx.quadraticCurveTo(110, 134, 132, 118);
+    ctx.stroke();
+  },
+  frog(ctx) {
+    ctx.beginPath(); ctx.arc(78, 72, 20, Math.PI * 0.85, Math.PI * 2.15); ctx.stroke();
+    ctx.beginPath(); ctx.arc(142, 72, 20, Math.PI * 0.85, Math.PI * 2.15); ctx.stroke();
+    ctx.beginPath(); ctx.arc(78, 72, 4.5, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(142, 72, 4.5, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(58, 78); ctx.quadraticCurveTo(38, 118, 65, 144); ctx.lineTo(155, 144); ctx.quadraticCurveTo(182, 118, 162, 78);
+    ctx.moveTo(96, 70); ctx.lineTo(124, 70);
+    ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(64, 114); ctx.quadraticCurveTo(110, 124, 156, 114); ctx.stroke();
+  },
+  bunny(ctx) {
+    ctx.beginPath(); ctx.ellipse(88, 56, 12, 30, -0.1, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.ellipse(132, 56, 12, 30, 0.1, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(110, 114, 40, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(94, 108, 3.5, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(126, 108, 3.5, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(105, 116); ctx.lineTo(110, 121); ctx.lineTo(115, 116);
+    ctx.moveTo(110, 121); ctx.lineTo(110, 129);
+    ctx.stroke();
+  },
+  duck(ctx) {
+    ctx.beginPath(); ctx.arc(98, 78, 26, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.ellipse(64, 82, 16, 7, -0.1, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(84, 64); ctx.lineTo(102, 70); ctx.stroke();
+    ctx.beginPath(); ctx.arc(92, 75, 3.5, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.ellipse(110, 126, 38, 24, 0, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(132, 118); ctx.lineTo(176, 86); ctx.lineTo(182, 102); ctx.lineTo(142, 126); ctx.closePath();
+    ctx.stroke();
+  },
+  fish(ctx) {
+    ctx.beginPath(); ctx.ellipse(105, 105, 55, 28, -0.2, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(155, 95); ctx.lineTo(185, 70); ctx.lineTo(178, 115); ctx.closePath();
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(68, 98); ctx.lineTo(80, 110);
+    ctx.moveTo(80, 98); ctx.lineTo(68, 110);
+    ctx.moveTo(100, 88); ctx.lineTo(105, 122);
+    ctx.moveTo(120, 85); ctx.lineTo(125, 118);
+    ctx.stroke();
+  }
+};
+
+// ============================================================================
+// 4. CARVING CANVAS LOGIC
+// ============================================================================
+const guideCanvas = document.getElementById('guideCanvas');
+const guideCtx = guideCanvas.getContext('2d');
+const carveCanvas = document.getElementById('carveCanvas');
+const carveCtx = carveCanvas.getContext('2d');
+
+let isCarving = false;
+let currentTool = 'carve';
+let currentPresetKey = 'cryingCat';
+let carveHistory = [];
+let inkLevel = 1.0;
+
+function saveCarveSnapshot() {
+  if (carveHistory.length >= 15) carveHistory.shift();
+  carveHistory.push(carveCtx.getImageData(0, 0, carveCanvas.width, carveCanvas.height));
+}
+
+function clearCarveCanvas(recordUndo = true) {
+  if (recordUndo) saveCarveSnapshot();
+  carveCtx.clearRect(0, 0, carveCanvas.width, carveCanvas.height);
+}
+
+function renderTraceGuide(presetKey) {
+  guideCtx.clearRect(0, 0, guideCanvas.width, guideCanvas.height);
+  const traceEnabled = document.getElementById('traceModeToggle').checked;
+  if (!traceEnabled || !PRESET_DRAWERS[presetKey]) return;
+
+  guideCtx.save();
+  guideCtx.strokeStyle = 'rgba(37, 99, 235, 0.38)';
+  guideCtx.lineWidth = 5;
+  guideCtx.setLineDash([5, 5]);
+  guideCtx.lineCap = 'round';
+  guideCtx.lineJoin = 'round';
+  PRESET_DRAWERS[presetKey](guideCtx);
+  guideCtx.restore();
+}
+
+function applyPreset(presetKey) {
+  currentPresetKey = presetKey;
+  const traceEnabled = document.getElementById('traceModeToggle').checked;
+
+  document.querySelectorAll('.preset-btn').forEach((btn) => {
+    btn.classList.toggle('active', btn.dataset.preset === presetKey);
+  });
+
+  if (traceEnabled) {
+    clearCarveCanvas(true);
+    renderTraceGuide(presetKey);
+  } else {
+    guideCtx.clearRect(0, 0, guideCanvas.width, guideCanvas.height);
+    clearCarveCanvas(true);
+    carveCtx.save();
+    carveCtx.strokeStyle = '#c1272d';
+    carveCtx.lineWidth = parseInt(document.getElementById('brushRange').value, 10) || 6;
+    carveCtx.lineCap = 'round';
+    carveCtx.lineJoin = 'round';
+    PRESET_DRAWERS[presetKey](carveCtx);
+    carveCtx.restore();
+  }
+}
+
+function getCarveCoords(e) {
+  const r = carveCanvas.getBoundingClientRect();
+  return {
+    x: (e.clientX - r.left) * (carveCanvas.width / r.width),
+    y: (e.clientY - r.top) * (carveCanvas.height / r.height)
+  };
+}
+
+carveCanvas.addEventListener('pointerdown', (e) => {
+  saveCarveSnapshot();
+  isCarving = true;
+  const p = getCarveCoords(e);
+  const brushSize = parseInt(document.getElementById('brushRange').value, 10);
+
+  carveCtx.save();
+  if (currentTool === 'erase') {
+    carveCtx.globalCompositeOperation = 'destination-out';
+    carveCtx.lineWidth = brushSize * 2.2;
+  } else {
+    carveCtx.globalCompositeOperation = 'source-over';
+    carveCtx.strokeStyle = '#c1272d';
+    carveCtx.lineWidth = brushSize;
+  }
+  carveCtx.lineCap = 'round';
+  carveCtx.lineJoin = 'round';
+  carveCtx.beginPath();
+  carveCtx.moveTo(p.x, p.y);
+  carveCtx.lineTo(p.x + 0.1, p.y + 0.1);
+  carveCtx.stroke();
+});
+
+carveCanvas.addEventListener('pointermove', (e) => {
+  if (!isCarving) return;
+  const p = getCarveCoords(e);
+  carveCtx.lineTo(p.x, p.y);
+  carveCtx.stroke();
+});
+
+window.addEventListener('pointerup', () => {
+  if (isCarving) {
+    carveCtx.restore();
+    isCarving = false;
+  }
+});
+
+document.getElementById('toolCarveBtn').addEventListener('click', () => {
+  currentTool = 'carve';
+  document.getElementById('toolCarveBtn').classList.add('active');
+  document.getElementById('toolEraseBtn').classList.remove('active');
+});
+
+document.getElementById('toolEraseBtn').addEventListener('click', () => {
+  currentTool = 'erase';
+  document.getElementById('toolEraseBtn').classList.add('active');
+  document.getElementById('toolCarveBtn').classList.remove('active');
+});
+
+document.getElementById('undoCarveBtn').addEventListener('click', () => {
+  if (carveHistory.length > 0) {
+    const prev = carveHistory.pop();
+    carveCtx.putImageData(prev, 0, 0);
+  }
+});
+
+document.getElementById('clearCarveBtn').addEventListener('click', () => {
+  clearCarveCanvas(true);
+});
+
+document.querySelectorAll('.preset-btn').forEach((btn) => {
+  btn.addEventListener('click', () => applyPreset(btn.dataset.preset));
+});
+
+document.getElementById('traceModeToggle').addEventListener('change', (e) => {
+  if (e.target.checked) {
+    clearCarveCanvas(true);
+    renderTraceGuide(currentPresetKey);
+  } else {
+    guideCtx.clearRect(0, 0, guideCanvas.width, guideCanvas.height);
+    applyPreset(currentPresetKey);
+  }
+});
+
+const gritRange = document.getElementById('gritRange');
+gritRange.addEventListener('input', () => {
+  document.getElementById('gritVal').textContent = gritRange.value;
+});
+
+const brushRange = document.getElementById('brushRange');
+brushRange.addEventListener('input', () => {
+  document.getElementById('brushVal').textContent = brushRange.value;
+});
+
+const stampSizeRange = document.getElementById('stampSizeRange');
+stampSizeRange.addEventListener('input', () => {
+  document.getElementById('stampSizeVal').textContent = stampSizeRange.value;
+});
+
+// ============================================================================
+// 5. HANKO GENERATOR
+// ============================================================================
+function generateHankoCanvas(opacityMultiplier = 1.0) {
+  const size = 240;
+  const off = document.createElement('canvas');
+  off.width = size;
+  off.height = size;
+  const c = off.getContext('2d');
+
+  const shape = document.getElementById('stampShape').value;
+  const label = document.getElementById('stampText').value.trim();
+  const grit = parseInt(gritRange.value, 10);
+
+  c.save();
+  c.globalAlpha = Math.max(0.2, opacityMultiplier);
+  c.strokeStyle = '#c1272d';
+  c.fillStyle = '#c1272d';
+
+  c.lineWidth = 12;
+  c.beginPath();
+  if (shape === 'circle') {
+    c.arc(size / 2, size / 2, 102, 0, Math.PI * 2);
+  } else if (shape === 'square') {
+    c.roundRect(22, 22, size - 44, size - 44, 14);
+  } else {
+    c.ellipse(size / 2, size / 2, 78, 108, 0, 0, Math.PI * 2);
+  }
+  c.stroke();
+
+  c.lineWidth = 3;
+  c.stroke();
+
+  c.drawImage(carveCanvas, 20, 12, 200, 190);
+
+  if (label) {
+    c.font = '900 22px "Noto Serif JP", serif';
+    c.textAlign = 'center';
+    c.fillText(label.toUpperCase(), size / 2, 192);
+  }
+
+  c.globalCompositeOperation = 'destination-out';
+  const blotchCount = grit * 14;
+  for (let i = 0; i < blotchCount; i++) {
+    const rx = Math.random() * size;
+    const ry = Math.random() * size;
+    const rad = Math.random() * (grit / 14) + 0.8;
+    c.beginPath();
+    c.arc(rx, ry, rad, 0, Math.PI * 2);
+    c.fill();
+  }
+
+  c.lineWidth = 1.8;
+  for (let j = 0; j < Math.floor(grit / 4); j++) {
+    c.beginPath();
+    c.moveTo(Math.random() * size, Math.random() * size);
+    c.lineTo(Math.random() * size, Math.random() * size);
+    c.stroke();
+  }
+
+  c.restore();
+  return off;
+}
+
+// ============================================================================
+// 6. DOCUMENT CANVAS & STAMPING
+// ============================================================================
+const docCanvas = document.getElementById('documentCanvas');
+const docCtx = docCanvas.getContext('2d');
+let uploadedBgImg = null;
+let stampedItems = [];
+
+function renderDocumentCanvas() {
+  const dict = I18N[currentLang];
+  docCtx.fillStyle = '#fdfbf7';
+  docCtx.fillRect(0, 0, docCanvas.width, docCanvas.height);
+
+  if (uploadedBgImg) {
+    const scale = Math.min(docCanvas.width / uploadedBgImg.width, docCanvas.height / uploadedBgImg.height);
+    const w = uploadedBgImg.width * scale;
+    const h = uploadedBgImg.height * scale;
+    docCtx.drawImage(uploadedBgImg, (docCanvas.width - w) / 2, (docCanvas.height - h) / 2, w, h);
+  } else {
+    docCtx.strokeStyle = '#d8cfc0';
+    docCtx.lineWidth = 2;
+    docCtx.strokeRect(20, 20, docCanvas.width - 40, docCanvas.height - 40);
+
+    for (let x = 70; x < docCanvas.width - 40; x += 48) {
+      docCtx.beginPath();
+      docCtx.moveTo(x, 35);
+      docCtx.lineTo(x, docCanvas.height - 35);
+      docCtx.stroke();
+    }
+
+    docCtx.fillStyle = '#3a332c';
+    docCtx.font = 'bold 17px "Noto Serif JP", serif';
+    docCtx.fillText(dict.docHeader, 36, 56);
+    docCtx.font = '12.5px monospace';
+    docCtx.fillText(dict.docSub, 36, 82);
+  }
+
+  stampedItems.forEach((item) => {
+    docCtx.save();
+    docCtx.translate(item.x, item.y);
+    docCtx.rotate(item.angle);
+    docCtx.drawImage(item.img, -item.size / 2, -item.size / 2, item.size, item.size);
+    docCtx.restore();
+  });
+}
+
+function updateInkIndicator() {
+  const pct = Math.round(inkLevel * 100);
+  const dict = I18N[currentLang];
+  const status = document.getElementById('inkStatus');
+  status.textContent = pct > 35 ? dict.inkReady(pct) : dict.inkLow(pct);
+}
+
+document.getElementById('shunikuPad').addEventListener('click', () => {
+  inkLevel = 1.0;
+  StampAudio.playInkDip();
+  updateInkIndicator();
+});
+
+docCanvas.addEventListener('pointerdown', (e) => {
+  const rect = docCanvas.getBoundingClientRect();
+  const x = (e.clientX - rect.left) * (docCanvas.width / rect.width);
+  const y = (e.clientY - rect.top) * (docCanvas.height / rect.height);
+
+  const hanko = generateHankoCanvas(inkLevel);
+  const stampDisplaySize = parseInt(stampSizeRange.value, 10) || 135;
+  const randomTilt = (Math.random() - 0.5) * 0.35;
+
+  stampedItems.push({
+    x,
+    y,
+    size: stampDisplaySize,
+    angle: randomTilt,
+    img: hanko
+  });
+
+  renderDocumentCanvas();
+
+  StampAudio.playStampThump();
+  document.body.classList.remove('shake-screen');
+  void document.body.offsetWidth;
+  document.body.classList.add('shake-screen');
+
+  inkLevel = Math.max(0.22, inkLevel - 0.18);
+  updateInkIndicator();
+});
+
+document.getElementById('undoStampBtn').addEventListener('click', () => {
+  if (stampedItems.length > 0) {
+    stampedItems.pop();
+    renderDocumentCanvas();
+  }
+});
+
+document.getElementById('bgUploadInput').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    const img = new Image();
+    img.onload = () => {
+      uploadedBgImg = img;
+      renderDocumentCanvas();
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+});
+
+document.getElementById('resetDocBtn').addEventListener('click', () => {
+  uploadedBgImg = null;
+  stampedItems = [];
+  renderDocumentCanvas();
+});
+
+document.getElementById('downloadStampPngBtn').addEventListener('click', () => {
+  const hanko = generateHankoCanvas(1.0);
+  const a = document.createElement('a');
+  a.download = `shuin-sticker-${Date.now()}.png`;
+  a.href = hanko.toDataURL('image/png');
+  a.click();
+});
+
+document.getElementById('downloadDocBtn').addEventListener('click', () => {
+  const a = document.createElement('a');
+  a.download = `shuin-document-${Date.now()}.png`;
+  a.href = docCanvas.toDataURL('image/png');
+  a.click();
+});
+
+// ============================================================================
+// 7. LANGUAGE SWITCHER
+// ============================================================================
+function setLanguage(lang) {
+  if (!I18N[lang]) return;
+  const prevDefaultText = I18N[currentLang].defaultStampText;
+  currentLang = lang;
+  document.documentElement.lang = lang;
+
+  const dict = I18N[lang];
+
+  document.querySelectorAll('.lang-btn').forEach((btn) => {
+    btn.classList.toggle('active', btn.dataset.lang === lang);
+  });
+
+  document.querySelectorAll('[data-i18n]').forEach((el) => {
+    const key = el.getAttribute('data-i18n');
+    if (dict[key]) el.textContent = dict[key];
+  });
+
+  document.getElementById('shunikuLabel').innerHTML = dict.shunikuPadHtml;
+
+  const stampTextInput = document.getElementById('stampText');
+  const allDefaults = [I18N.en.defaultStampText, I18N.vi.defaultStampText, I18N.ja.defaultStampText];
+  if (allDefaults.includes(stampTextInput.value.trim()) || stampTextInput.value.trim() === prevDefaultText) {
+    stampTextInput.value = dict.defaultStampText;
+  }
+
+  updateInkIndicator();
+  renderDocumentCanvas();
+}
+
+document.querySelectorAll('.lang-btn').forEach((btn) => {
+  btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
+});
+
+// Initial boot
+applyPreset('cryingCat');
+setLanguage('en');
+renderDocumentCanvas();
+</script>
+</body>
+</html>
